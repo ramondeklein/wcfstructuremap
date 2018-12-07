@@ -52,6 +52,7 @@
     <Compile Include="HelloService.cs" />
     <Compile Include="IHelloFormatter.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="StructureMapInstanceContext.cs" />
     <Compile Include="StructureMapInstanceProvider.cs" />
     <Compile Include="StructureMapServiceBehavior.cs" />
     <Compile Include="StructureMapServiceHost.cs" />

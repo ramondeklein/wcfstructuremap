@@ -19,17 +19,39 @@ namespace HelloServer
 
         public object GetInstance(InstanceContext instanceContext)
         {
-            return _container.GetInstance(_type);
+            if (instanceContext == null)
+                throw new ArgumentNullException(nameof(instanceContext));
+
+            var structureMapInstanceContext = new StructureMapInstanceContext(_container);
+            instanceContext.Extensions.Add(structureMapInstanceContext);
+            try
+            {
+                return structureMapInstanceContext.Container.GetInstance(_type);
+            }
+            catch (Exception)
+            {
+                structureMapInstanceContext.Dispose();
+                instanceContext.Extensions.Remove(structureMapInstanceContext);
+                throw;
+            }
         }
 
         public object GetInstance(InstanceContext instanceContext, Message message)
         {
-            return _container.GetInstance(_type);
+            return GetInstance(instanceContext);
         }
 
         public void ReleaseInstance(InstanceContext instanceContext, object instance)
         {
-            _container.Release(instance);
+            if (instanceContext == null)
+                throw new ArgumentNullException(nameof(instanceContext));
+
+            var structureMapInstanceContext = instanceContext.Extensions.Find<StructureMapInstanceContext>();
+            if (structureMapInstanceContext != null)
+            {
+                structureMapInstanceContext.Container.Release(instance);
+                structureMapInstanceContext.Dispose();
+            }
         }
     }
 }
