@@ -55,7 +55,6 @@
     <Compile Include="StructureMapInstanceContext.cs" />
     <Compile Include="StructureMapInstanceProvider.cs" />
     <Compile Include="StructureMapServiceBehavior.cs" />
-    <Compile Include="StructureMapServiceHost.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

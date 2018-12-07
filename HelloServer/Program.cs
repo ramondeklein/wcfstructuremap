@@ -11,10 +11,11 @@ namespace HelloServer
         {
             using (var container = Register())
             {
-                using (var host = new StructureMapServiceHost(container, typeof(HelloWcfServer), Settings.BaseUri))
+                using (var host = new ServiceHost(typeof(HelloWcfServer), Settings.BaseUri))
                 {
                     try
                     {
+                        host.Description.Behaviors.Add(new StructureMapServiceBehavior(container));
                         host.AddServiceEndpoint(typeof(IHello), new NetTcpBinding(SecurityMode.None), Settings.HelloServiceName);
                         host.Open();
 
