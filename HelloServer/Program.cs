@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Security.Cryptography.X509Certificates;
 using System.ServiceModel;
+using System.ServiceModel.PeerResolvers;
 using HelloInterface;
+using StructureMap;
 
 namespace HelloServer
 {
@@ -8,24 +11,41 @@ namespace HelloServer
     {
         public static void Main()
         {
-            using (var host = new ServiceHost(typeof(HelloWcfServer), new Uri("net.tcp://localhost:54321/Hello")))
+            using (var container = Register())
             {
-                try
+                using (var host = new StructureMapServiceHost(container, typeof(HelloWcfServer), Settings.BaseUri))
                 {
-                    host.AddServiceEndpoint(typeof(IHello), new NetTcpBinding(SecurityMode.None), "HelloService");
-                    host.Open();
+                    try
+                    {
+                        host.AddServiceEndpoint(typeof(IHello), new NetTcpBinding(SecurityMode.None), Settings.HelloServiceName);
+                        host.Open();
 
-                    Console.WriteLine("Service is ready (ENTER to quit).");
-                    Console.ReadLine();
+                        Console.WriteLine("Service is ready (ENTER to quit).");
+                        Console.ReadLine();
 
-                    host.Close();
-                }
-                catch (Exception exc)
-                {
-                    Console.Error.WriteLine($"Exception: {exc.Message}");
-                    host.Abort();
+                        host.Close();
+                    }
+                    catch (Exception exc)
+                    {
+                        Console.Error.WriteLine($"Exception: {exc.Message}");
+                        Console.ReadLine();
+
+                        host.Abort();
+                    }
                 }
             }
+        }
+
+        private static IContainer Register()
+        {
+            return new Container(c =>
+            {
+                c.Scan(i =>
+                {
+                    i.WithDefaultConventions();
+                    i.TheCallingAssembly();
+                });
+            });
         }
     }
 }
