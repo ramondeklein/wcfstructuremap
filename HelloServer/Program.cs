@@ -10,27 +10,25 @@ namespace HelloServer
         public static void Main()
         {
             using (var container = Register())
+            using (var host = new ServiceHost(typeof(HelloWcfServer), Settings.BaseUri))
             {
-                using (var host = new ServiceHost(typeof(HelloWcfServer), Settings.BaseUri))
+                try
                 {
-                    try
-                    {
-                        host.Description.Behaviors.Add(new StructureMapServiceBehavior(container));
-                        host.AddServiceEndpoint(typeof(IHello), new NetTcpBinding(SecurityMode.None), Settings.HelloServiceName);
-                        host.Open();
+                    host.Description.Behaviors.Add(new StructureMapServiceBehavior(container));
+                    host.AddServiceEndpoint(typeof(IHello), new NetTcpBinding(SecurityMode.None), Settings.HelloServiceName);
+                    host.Open();
 
-                        Console.WriteLine("Service is ready (ENTER to quit).");
-                        Console.ReadLine();
+                    Console.WriteLine("Service is ready (ENTER to quit).");
+                    Console.ReadLine();
 
-                        host.Close();
-                    }
-                    catch (Exception exc)
-                    {
-                        Console.Error.WriteLine($"Exception: {exc.Message}");
-                        Console.ReadLine();
+                    host.Close();
+                }
+                catch (Exception exc)
+                {
+                    Console.Error.WriteLine($"Exception: {exc.Message}");
+                    Console.ReadLine();
 
-                        host.Abort();
-                    }
+                    host.Abort();
                 }
             }
         }
