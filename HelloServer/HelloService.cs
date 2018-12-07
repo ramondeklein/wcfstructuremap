@@ -4,7 +4,7 @@ using HelloInterface;
 
 namespace HelloServer
 {
-    [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession, UseSynchronizationContext = false, AddressFilterMode = AddressFilterMode.Any)]
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerCall, UseSynchronizationContext = false, AddressFilterMode = AddressFilterMode.Any)]
     public class HelloWcfServer : IHello
     {
         private readonly IHelloFormatter _helloFormatter;
