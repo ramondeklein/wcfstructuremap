@@ -13,8 +13,8 @@ namespace HelloServer
 
         public StructureMapInstanceProvider(IContainer container, Type type)
         {
-            _container = container;
-            _type = type;
+            _container = container ?? throw new ArgumentNullException(nameof(container));
+            _type = type ?? throw new ArgumentNullException(nameof(type));
         }
 
         public object GetInstance(InstanceContext instanceContext)

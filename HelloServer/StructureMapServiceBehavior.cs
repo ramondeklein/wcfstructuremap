@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
@@ -14,7 +15,7 @@ namespace HelloServer
 
         public StructureMapServiceBehavior(IContainer container)
         {
-            _container = container;
+            _container = container ?? throw new ArgumentNullException(nameof(container));
         }
 
         public void Validate(ServiceDescription serviceDescription, ServiceHostBase serviceHostBase)
