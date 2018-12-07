@@ -27,10 +27,11 @@ namespace HelloServer
 
         public void ApplyDispatchBehavior(ServiceDescription serviceDescription, ServiceHostBase serviceHostBase)
         {
+            var instanceProvider = new StructureMapInstanceProvider(_container, serviceDescription.ServiceType);
             foreach (var channelDispatcher in serviceHostBase.ChannelDispatchers.OfType<ChannelDispatcher>())
             {
                 foreach (var ed in channelDispatcher.Endpoints)
-                    ed.DispatchRuntime.InstanceProvider = new StructureMapInstanceProvider(_container, serviceDescription.ServiceType);
+                    ed.DispatchRuntime.InstanceProvider = instanceProvider;
             }
         }
     }
